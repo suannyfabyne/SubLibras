@@ -179,8 +179,8 @@ router.post('/', function (req, res) {
 
     var review = function(){
 
-        os = ['Teste texto1', 'Teste texto2', 'Teste texto3'];
-        ts = ['Texte glosa1', 'Teste glosa2', 'Teste glosa3'];
+        os = ['SO1', 'SO2', 'SO3'];
+        ts = ['ST1', 'ST2', 'ST3'];
 
         for (i = 0; i < ts.length; i++) { 
         var sqlreview = "INSERT INTO reviewTable (requestIdReview, sentenceId, dateReview, operator, OS, TS, modificationType) VALUES ?";

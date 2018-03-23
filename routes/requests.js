@@ -39,6 +39,17 @@ router.get('/translationRequest', (req, res) =>{
       console.log('GET translationRequest');
 });});
 
+router.get('/translationRequest/date', (req, res) =>{
+ connection.query('SELECT DISTINCT requestDate FROM translationRequest', function(error, results, fields){
+      if(error) 
+        res.json(error);
+      else
+        res.json(results);
+      
+      console.log('Request Date');
+});});
+
+
 router.get('/reviewtable', (req, res) =>{
  connection.query('SELECT * FROM reviewTable' , function(error, results, fields){
       if(error) 
@@ -48,6 +59,21 @@ router.get('/reviewtable', (req, res) =>{
       
       console.log('GET joinSentences');
 });});
+
+
+router.get('/reviewtable/:id?', (req, res) =>{
+    let filter = '';
+    if(req.params.id) filter = ' WHERE requestIdReview=' + parseInt(req.params.id);
+    connection.query('SELECT * FROM reviewTable' + filter, function(error, results, fields){
+      if(error) 
+        res.json(error);
+      else{
+        res.json(results);
+      }
+      
+      console.log('GET id Sentence review table');
+});});
+
 
 
 router.get('/reviewtable/:id?/:id2?/:id3?', (req, res) =>{

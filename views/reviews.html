@@ -24,8 +24,8 @@
           </div>
           <div class="collapse navbar-collapse" id="js-navbar-collapse">
             <ul class="nav navbar-nav">
-              <li class="active" style="font-family: FreeMono;"><a href="/">Submeter</a></li>
-              <li style="font-family: FreeMono;"><a href="/reviews">Revisões</a></li>
+              <li  style="font-family: FreeMono;"><a href="/">Submeter</a></li>
+              <li class="active" style="font-family: FreeMono;"><a href="/reviews">Revisões</a></li>
             </ul>
           </div>
         </div>  
@@ -37,6 +37,13 @@
         </ul>
       </div> 	
     </div>
+    <div class="container">
+    <select style="text-transform: uppercase; width: 200px; margin-right: -10px; margin-bottom: 10px;" id="drop-users" class="form-control container" ng-model="selectedDate">
+      <option></option>
+      <option ng-repeat="date in arrayDate" value="{{date.requestDate}}">{{date.requestDate}}</option>
+    </select> </div>
+
+
 
     <div class="table-responsive container">
    	<div ng-controller="MyCtrl">
@@ -53,7 +60,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="request in requests | limitTo : 5 : 72 " ng-click="setSelected(request.requestId)" ng-class="{selected: request.requestId === idSelectedVote}">
+        <tr ng-repeat="request in requests | limitTo : 5 : 79 | filter: selectedDate" ng-click="setSelected(request.requestId)" ng-class="{selected: request.requestId === idSelectedVote}">
             <td><p>{{request.requestId}}</p></td>
             <td><p>{{request._clientId}}</p></td>
             <td><p>{{request. _objectCode}}</p></td>
@@ -67,7 +74,6 @@
 
    </div>
    </div>
-
 
 </body>
 </html>

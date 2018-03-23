@@ -45,6 +45,14 @@ var myApp = angular.module('myApp',[])
          console.log(localStorage.idSentence);
          console.log(localStorage.operator + ' operator value');
 
+          $http.get('http://localhost:3000/requests/reviewtablea/'+ localStorage.id + '/' + localStorage.idSentence).then(function(success) {
+            if(success.data.length>0) {
+              console.log(success.data[success.data.length-1].operator + 'AAAaa');
+              localStorage.maxop = success.data[success.data.length-1].operator;
+            }
+         })
+
+
       };
 
 
@@ -61,18 +69,28 @@ var myApp = angular.module('myApp',[])
       return localStorage.idSentence
     }
 
+    $scope.getmaxOp = function() {
+      return localStorage.maxop
+    }
+
+
 
      //This method will call your server, with the GET method and the url /show
 
-      var refresh2 = function (id, operator){
-      $http.get('http://localhost:3000/requests/reviewtable/').then(function(success) {
+      var refresh2 = function (id){
+      $http.get('http://localhost:3000/requests/reviewtable/' + id).then(function(success) {
       //console.log(success.data);
       if(success.data.length>0) {
-         $scope.sentences=success.data;
+
+
+         $scope.sentences = success.data;
       }
       })
+
+
+
     };
-    refresh2();
+    refresh2(localStorage.id);
 
       var refresh3 = function(id, idSentence, operator) {
       $http.get('http://localhost:3000/requests/reviewtable/'+ id + '/' + idSentence + '/' + operator).then(function(success) {
@@ -82,7 +100,7 @@ var myApp = angular.module('myApp',[])
       }
       })
     };
-    refresh3(localStorage.id, localStorage.idSentence, localStorage.operator);
+    refresh3(localStorage.id, localStorage.idSentence, localStorage.maxop);
     console.log(localStorage.id, localStorage.idSentence, localStorage.operator);
 
 
@@ -113,7 +131,13 @@ var myApp = angular.module('myApp',[])
     };
     refresh4(localStorage.id, localStorage.idSentence);
 
-
+    var refresh5 = function() {
+      $http.get('http://localhost:3000/requests/translationRequest/date').then(function (success) {
+        $scope.arrayDate = success.data;
+        console.log(success.data);
+      })
+    }
+    refresh5();
 
 
 
