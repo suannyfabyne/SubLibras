@@ -6,7 +6,7 @@ var myApp = angular.module('myApp',[])
      //This method will call your server, with the GET method and the url /show
 
 
-      var refresh = function (){
+      var showRequests = function (){
       $http.get("http://localhost:3000/requests/translationRequest").then(function(success) {
       //console.log(success.data);
 
@@ -17,7 +17,7 @@ var myApp = angular.module('myApp',[])
 
     })};
 
-    refresh();
+    showRequests();
 
 
       var myfunc = function (){
@@ -73,34 +73,41 @@ var myApp = angular.module('myApp',[])
       return localStorage.maxop
     }
 
+     $scope.Teste = function(op) {
+        if (op > 1) return 1;
+        else return 0;
+      }
+      $scope.Teste2 = function(op) {
+        if (op > 1) return 0;
+        else return 1;
+      }
+
 
 
      //This method will call your server, with the GET method and the url /show
 
-      var refresh2 = function (id){
-      $http.get('http://localhost:3000/requests/reviewtable/' + id).then(function(success) {
+      var showSentences = function (id){
+      $http.get('http://localhost:3000/requests/reviewtable/maxoperator/' + id).then(function(success) {
       //console.log(success.data);
       if(success.data.length>0) {
-
-
          $scope.sentences = success.data;
       }
       })
-
-
-
     };
-    refresh2(localStorage.id);
 
-      var refresh3 = function(id, idSentence, operator) {
+    showSentences(localStorage.id);
+
+      var showSentence = function(id, idSentence, operator) {
       $http.get('http://localhost:3000/requests/reviewtable/'+ id + '/' + idSentence + '/' + operator).then(function(success) {
       //console.log(success.data);
       if(success.data.length>0) {
          $scope.sentence = success.data[0];
+
       }
       })
     };
-    refresh3(localStorage.id, localStorage.idSentence, localStorage.maxop);
+    showSentence(localStorage.id, localStorage.idSentence, localStorage.maxop);
+
     console.log(localStorage.id, localStorage.idSentence, localStorage.operator);
 
 
@@ -115,13 +122,20 @@ var myApp = angular.module('myApp',[])
 
       $http.post('http://localhost:3000/requests/reviewtable/', sentence).then(function(success) {
       //console.log(success.data);
+          $http.get('http://localhost:3000/requests/reviewtablea/'+ localStorage.id + '/' + localStorage.idSentence).then(function(success) {
+            if(success.data.length>0) {
+              console.log(success.data[success.data.length-1].operator + 'AAAaa');
+              localStorage.maxop = success.data[success.data.length-1].operator;
+              history.go(0);
+            }
+         })
 
       })
-      refresh4(localStorage.id, localStorage.idSentence);
+      
 
     };
 
-      var refresh4 = function(id, idSentence) {
+      var showReviews = function(id, idSentence) {
       $http.get('http://localhost:3000/requests/reviewtablea/'+ id + '/' + idSentence).then(function(success) {
       //console.log(success.data);
       if(success.data.length>0) {
@@ -129,15 +143,14 @@ var myApp = angular.module('myApp',[])
       }
       })
     };
-    refresh4(localStorage.id, localStorage.idSentence);
+    showReviews(localStorage.id, localStorage.idSentence);
 
-    var refresh5 = function() {
+    var showDates = function() {
       $http.get('http://localhost:3000/requests/translationRequest/date').then(function (success) {
         $scope.arrayDate = success.data;
-        console.log(success.data);
       })
     }
-    refresh5();
+    showDates();
 
 
 

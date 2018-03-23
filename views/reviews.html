@@ -52,7 +52,6 @@
         <tr>
 
             <th style=" table-layout: fixed; text-align: center; font-family: FreeMono;"><p>Pedido</p></th>
-            <th style=" table-layout: fixed; text-align: center;font-family: FreeMono;"><p>Cliente</p></th>
             <th style=" table-layout: fixed; text-align: center;font-family: FreeMono;"><p>Tipo do arquivo</p></th>
             <th style=" table-layout: fixed; text-align: center;font-family: FreeMono;"><p>Data do pedido</p></th>
             <th style=" table-layout: fixed; text-align: center;font-family: FreeMono;"><p>Status</p></th>
@@ -62,7 +61,6 @@
       <tbody>
         <tr ng-repeat="request in requests | limitTo : 5 : 79 | filter: selectedDate" ng-click="setSelected(request.requestId)" ng-class="{selected: request.requestId === idSelectedVote}">
             <td><p>{{request.requestId}}</p></td>
-            <td><p>{{request._clientId}}</p></td>
             <td><p>{{request. _objectCode}}</p></td>
             <td><p>{{request.requestDate}}</p></td>
             <td><p>{{request.requestStatus}}</p></td>

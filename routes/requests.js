@@ -39,6 +39,7 @@ router.get('/translationRequest', (req, res) =>{
       console.log('GET translationRequest');
 });});
 
+
 router.get('/translationRequest/date', (req, res) =>{
  connection.query('SELECT DISTINCT requestDate FROM translationRequest', function(error, results, fields){
       if(error) 
@@ -59,6 +60,22 @@ router.get('/reviewtable', (req, res) =>{
       
       console.log('GET joinSentences');
 });});
+
+router.get('/reviewtable/maxoperator/:id?', (req, res) =>{
+    let filter = '';
+    if(req.params.id) filter = ' WHERE requestIdReview=' + parseInt(req.params.id);
+
+ connection.query('SELECT requestIdReview, sentenceId, MAX(operator) as maxoperator, operator, OS, TS, modificationType FROM reviewTable' + filter + 
+  ' group by sentenceId', function(error, results, fields){
+      if(error) 
+        res.json(error);
+      else
+        res.json(results);
+        
+      console.log('GET joinSentences');
+});});
+
+
 
 
 router.get('/reviewtable/:id?', (req, res) =>{

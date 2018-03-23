@@ -44,11 +44,11 @@
         <div class="container"><p style="font-size: 20px; font-family: FreeMono; color: black; border:2px;">Texto original</p></div>
         <input type="text" disabled="disabled" class="form-control container" style="height: 40px; font-family: FreeMono; color: black; font-size: 17px; margin-bottom: 20px;" id="TS" ng-model="sentence.OS">
 
-      <div class="container"><p style="font-size: 20px; font-family: FreeMono; color: black; border:2px;">Texto traduzido</p></div>
+      <div class="container"><p style="font-size: 20px; font-family: FreeMono; color: black; border:2px;">Texto atual</p></div>
         <input type="text" class="form-control container" style="height: 40px; font-family: FreeMono; color: black; font-size: 17px;" id="TS" ng-model="sentence.TS">
       </div>
 
-      <button type="submit" class="btn btn-info btn-block container"  ng-click="postedit(sentence.TS, sentence.requestIdReview, sentence.sentenceId, sentence.operator)" ng-click="refresh4()" style="margin-right: 28%; height:35px; width: 80px;"><p style="font-size: 15px;">Revisar</p></button> 
+      <div class="container"><button type="submit" class="btn btn-info btn-block container"  ng-click="postedit(sentence.TS, sentence.requestIdReview, sentence.sentenceId, sentence.operator)"  style="margin-right: -12px; height:35px; width: 80px;"><p style="font-size: 15px;">Revisar</p></button> </div>
   </form>
 
 <div class="container"><p style="font-size: 20px; font-family: FreeMono; color: black; border:2px; margin-top: 30px;">Histórico de revisões</p></div>
@@ -58,7 +58,7 @@
           <thead>
             <tr>
                 <th style=" table-layout: fixed; text-align: center; font-family: FreeMono; width: 140px;"><p>ID da Sentença</p></th>
-                <th style=" table-layout: fixed; text-align: center; font-family: FreeMono;"><p>Numero da revisão</p></th>
+                <th style=" table-layout: fixed; text-align: center; font-family: FreeMono;"><p>Número da revisão</p></th>
                 <th style=" table-layout: fixed; text-align: center; font-family: FreeMono;"><p>Sentença Original</p></th>
                 <th style=" table-layout: fixed; text-align: center;font-family: FreeMono;"><p>Sentença Modificada</p></th>
             </tr>

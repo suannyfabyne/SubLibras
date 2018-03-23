@@ -46,17 +46,21 @@
                 <th style=" table-layout: fixed; text-align: center; font-family: FreeMono; width: 140px;"><p>ID da Sentença</p></th>
                 <th style=" table-layout: fixed; text-align: center; font-family: FreeMono;"><p>Sentença Original</p></th>
                 <th style=" table-layout: fixed; text-align: center;font-family: FreeMono;"><p>Sentença Traduzida</p></th>
+                <th style=" table-layout: fixed; text-align: center;font-family: FreeMono; width: 100px;"><p>Revisada</p></th>
+
             </tr>
           </thead>
           <tbody>
-            <tr ng-repeat="sentence in sentences | filter: {operator: 1}" ng-click="setSentence(sentence.sentenceId, sentence.operator)" ng-class="{selected: sentence.sentenceId === idSelectedSentence}">
-                <td style="text-align: center; width: 140px; "><p>{{sentence.sentenceId}}</p></td>
+            <tr ng-repeat="sentence in sentences" ng-click="setSentence(sentence.sentenceId, sentence.operator)" ng-class="{selected: sentence.sentenceId === idSelectedSentence}">
+                <td style="text-align: center; width: 140px;"> <p>{{sentence.sentenceId}}</p></td>
                 <td><p>{{sentence.OS}}</p></td>
                 <td><p>{{sentence.TS}}</p></td>
+                <td style="text-align: center; width: 100px;" ><p ng-if="Teste(sentence.maxoperator)" style="" class="glyphicon glyphicon-ok"></p><p ng-if="Teste2(sentence.maxoperator)" style="" class="glyphicon glyphicon-remove"></p></td>
+
             </tr>
           </tbody>
         </table>
-        <a href="/modify"> <button type="button" class="btn btn-success" ng-click="setSentence(idSelectedSentence, sentence.operator)" style="float: right; margin-right: 5%; width: 100px;">Revisar</button> </a> 
+        <a href="/modify"> <button type="button" class="btn btn-success" ng-click="setSentence(idSelectedSentence, sentence.operator)" style="float: right; margin-right: 6%; width: 100px;">Revisar</button> </a> 
     </div> 
   </div>
 
