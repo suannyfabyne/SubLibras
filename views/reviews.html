@@ -59,7 +59,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr ng-repeat="request in requests | limitTo : 5 : 79 | filter: selectedDate" ng-click="setSelected(request.requestId)" ng-class="{selected: request.requestId === idSelectedVote}">
+        <tr ng-repeat="request in requests | limitTo : 5 : 347 | filter: selectedDate" ng-click="setSelected(request.requestId)" ng-class="{selected: request.requestId === idSelectedVote}">
             <td><p>{{request.requestId}}</p></td>
             <td><p>{{request. _objectCode}}</p></td>
             <td><p>{{request.requestDate}}</p></td>

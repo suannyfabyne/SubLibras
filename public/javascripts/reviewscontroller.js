@@ -82,6 +82,22 @@ var myApp = angular.module('myApp',[])
         else return 1;
       }
 
+   /* var translate = function() {
+
+      //text = 'Good morning to you';
+      //lang = 'ASL';
+      //headers = {"Content-Type": "application/json"};
+
+      //var value = {
+      //  text , lang
+      //};
+
+      $http.post('http://150.165.205.88/translate', value, headers).then(function(success) {
+        console.log(success.data);
+      })
+        
+    }
+    translate(); */
 
 
      //This method will call your server, with the GET method and the url /show

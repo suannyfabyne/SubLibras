@@ -3,6 +3,8 @@ var router = express.Router();
 var connection = require('../db/connection');
 /* GET home page. */
 
+
+
 router.get('/clients', (req, res) =>{
  connection.query('SELECT * FROM clients', function(error, results, fields){
       if(error) 
@@ -13,7 +15,13 @@ router.get('/clients', (req, res) =>{
       console.log('GET clients');
 });});
 
-
+    /* connection.query('SELECT originSentences.sentence AS sentence, translatedSentences.translatedSentence AS translatedSentence FROM originSentences JOIN translatedSentences ON translatedSentences._requestId_ = 350 AND originSentences._requestId = 350 AND translatedSentences.sentenceId = originSentences.sentenceId', function(error, results, fields){
+          if(error) 
+            res.json(error);
+          else
+            res.json(results);
+          
+          console.log('GET clients');*/
 
 
 router.get('/originSentences', (req, res) =>{
