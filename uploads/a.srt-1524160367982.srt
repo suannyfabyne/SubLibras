@@ -1,0 +1,11 @@
+00:00:00.959 --> 00:00:02.336
+Ola, esta e uma legenda
+
+00:00:02.419 --> 00:00:04.254
+Essa e a segunda linha 
+
+00:00:03.419 --> 00:00:05.254
+Essa e a terceira linha
+
+00:00:04.419 --> 00:00:06.254
+Essa e a quarta linha

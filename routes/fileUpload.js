@@ -24,12 +24,11 @@ var storage = multer.diskStorage({
 
 var upload = multer({ storage: storage }).single('avatar');
 var objectType, objectCode;
-
+var Submetendo
 
 router.post('/', function (req, res) {
     upload(req, res, function (err) {
         if (err) {
-            // An error occurred when uploading
         }
 
         console.log(path.extname(req.file.originalname));
@@ -91,17 +90,6 @@ router.post('/', function (req, res) {
         treatingFile();
       });
 
-/*function readTextFile(filepath) {
-    var str = "";
-    var txtFile = new File(filepath);
-    txtFile.open("r");
-    while (!txtFile.eof) {
-        // read each line of text
-        str += txtFile.readln() + "\n";
-    }
-    return str;
-}
-*/
     var postTextFile = function(selectrequest, countline, line) {
 
         var contador = 0;
@@ -119,7 +107,10 @@ router.post('/', function (req, res) {
                 if (err) throw err;
                 console.log("Number of records inserted ORIGINAL: " + i + " - " + result.affectedRows );
                 contador++;
-                if (contador == (line.length -1)) translation();
+                if (contador == (line.length -1)) {
+                    updateStatus(selectrequest, 2)
+                    translation();
+                }
             });
 
         }
@@ -144,7 +135,10 @@ router.post('/', function (req, res) {
     var lock = 1;
 
     if (objectCode == 'L'){
+
+        updateStatus(selectrequest, 1);
         rd.on('line', function(line) {
+
 
             lista = [];
                 contador = 0;
@@ -160,41 +154,29 @@ router.post('/', function (req, res) {
                     if (err) throw err;
                     console.log("Number of records insertedddd ORIGINAL: " + result.affectedRows);
                     contador++;
-                    if (contador == (line.length -1)) translation();
+                    console.log(contador);
+                    console.log(line.length -1);
+                    if (contador == (list.length -1)) {
+                        updateStatus(selectrequest, 2)
+                        translation();
+
+                    }
                 });
 
                 }
-
-
-
-                /*for (var i = 0; i < line.length; i++) {
-                    if (line[i] == '.') {
-                        for (var j = i; j >= 0; j--) {
-                            lista = line[j] + lista;
-                        }
-                    }
-                    else{aux[countline] = line;}
-
-                }
-                aux= aux + ' ' + line;            
-
-                var match = aux.split(".");
-
-                con(selectrequest, countline, match);*/
-            
-            
-        
+                  
 
                 }); }
 
     else if (objectCode == 'T'){
-    fs.readFile('uploads/' + req.file.filename, 'utf8', function (err,data) {
-    if (err) {
-        return console.log(err);
-    }
-    var match = (data.replace(/(\n)/g, ' ')).split('.');
-    console.log(match);
-    postTextFile(selectrequest, countline, match);
+        updateStatus(selectrequest, 1)
+        fs.readFile('uploads/' + req.file.filename, 'utf8', function (err,data) {
+        if (err) {
+            return console.log(err);
+        }
+        var match = (data.replace(/(\n)/g, ' ')).split('.');
+        console.log(match);
+        postTextFile(selectrequest, countline, match);
 
     });
 
@@ -208,6 +190,19 @@ router.post('/', function (req, res) {
     }
 
 
+    var updateStatus = function(selectrequest, num){
+
+        filter = ' WHERE requestId=' + selectrequest;
+        //var update = "UPDATE translationRequest SET requestStatus = '1'" + filter;
+
+          connection.query('UPDATE translationRequest SET requestStatus=' + num + filter, function(error, results, fields){
+          if(error) 
+            res.json(error);
+          else          
+          console.log('UPDATE');
+        });
+
+    }
 
 
     var translation = function() {
@@ -216,19 +211,12 @@ router.post('/', function (req, res) {
         var list = ['Período passado vez 3 porquinho', 'que viver passado floresta com sua mãe', 'dia como já estar muito crescido', 'decidir passado ir viver cada sua casa'];
         var i = 0;
         var transsql = "INSERT INTO translatedSentences (_requestId_, sentenceId, timeSentence, statusSentence, pendencyCode, translatedSentence) VALUES ?";
-
-
-          // text = 'Good morning to you';
-          // lang = 'ASL';
-          // headers = {"Content-Type": "application/json"};
-
-          // var value = {
-          //  text , lang
-          // };
+        updateStatus(selectrequest, 3)
 
         var acounter = 0;
         var bcontador = 0;
         filter = ' WHERE _requestId=' + selectrequest;
+
          connection.query('SELECT sentence FROM originSentences' + filter, function(error, results, fields){
               if(error) 
                 res.json(error);
@@ -244,16 +232,18 @@ router.post('/', function (req, res) {
                   var value = {
                    text , lang
                   };
+                            console.log("teste");
 
                 request.post(
                     'http://150.165.205.88/translate',
                     { json: value },
                     function (error, response, body) {
                         if (!error && response.statusCode == 200) {
-                            sleep.sleep(3);
+                            //sleep.sleep(3);
                             acounter++;
                             anotherlist[i] = body;
-                            console.log(anotherlist[i]);
+
+                            console.log(anotherlist[i] + "anotherlist");
 
 
                             var transvalues = [
@@ -263,7 +253,10 @@ router.post('/', function (req, res) {
                             if (err) throw err;
                             console.log("Number of records inserted TRANSLATED: " + result.affectedRows);
                             bcontador++;
-                            if (bcontador == (results.length-1)) review();
+                            if (bcontador == (results.length-1)) {
+                                updateStatus(selectrequest, 4)
+                                review();
+                            }
                         });
 
 
