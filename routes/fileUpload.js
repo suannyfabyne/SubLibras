@@ -92,8 +92,19 @@ router.post('/', function (req, res) {
 
     var postTextFile = function(selectrequest, countline, line) {
 
+        console.log("ENTREI POST TEXT FILE");
+        var tam;
+        console.log(line[line.length-1] + " LINE LENG");
+
+        /*if (line[line.length-1] === 'null') {
+            tam = line.length-1;
+            console.log(tam + " tam");
+        }
+        else*/ tam = line.length;
+
+
         var contador = 0;
-        for (var i = 0; i < (line.length -1); i++) {
+        for (var i = 0; i < (tam); i++) {
             countline = countline + 1;
 
             var secondsql = "INSERT INTO originSentences (_requestId, sentenceId, timeSentence, sentence) VALUES ?";
@@ -107,7 +118,7 @@ router.post('/', function (req, res) {
                 if (err) throw err;
                 console.log("Number of records inserted ORIGINAL: " + i + " - " + result.affectedRows );
                 contador++;
-                if (contador == (line.length -1)) {
+                if (contador == (tam)) {
                     updateStatus(selectrequest, 2)
                     translation();
                 }
@@ -156,7 +167,7 @@ router.post('/', function (req, res) {
                     contador++;
                     console.log(contador);
                     console.log(line.length -1);
-                    if (contador == (list.length -1)) {
+                    if (contador == (list.length)) {
                         updateStatus(selectrequest, 2)
                         translation();
 
@@ -174,8 +185,17 @@ router.post('/', function (req, res) {
         if (err) {
             return console.log(err);
         }
-        var match = (data.replace(/(\n)/g, ' ')).split('.');
+        var match;
+
+        if(data.search(/[.!?]/) == -1) {
+            data = data + '.';
+            console.log("AAAAAAa" + data + "PRIMEIRO MATCH");
+        }
+
+        //match[match.length-1] = match[match.length-1].replace(/[.!?]/, '')
+        match = (data.replace(/(\n)/g, ' ')).match(/.*?[.!?](?![.!?])(?<!\b\w\w\.)/g);
         console.log(match);
+
         postTextFile(selectrequest, countline, match);
 
     });
@@ -207,17 +227,18 @@ router.post('/', function (req, res) {
 
     var translation = function() {
         var time;
+        var retorno = 0;
         var anotherlist = [];
         var list = ['Período passado vez 3 porquinho', 'que viver passado floresta com sua mãe', 'dia como já estar muito crescido', 'decidir passado ir viver cada sua casa'];
         var i = 0;
         var transsql = "INSERT INTO translatedSentences (_requestId_, sentenceId, timeSentence, statusSentence, pendencyCode, translatedSentence) VALUES ?";
         updateStatus(selectrequest, 3)
-
+        var lock = false;
         var acounter = 0;
         var bcontador = 0;
         filter = ' WHERE _requestId=' + selectrequest;
 
-         connection.query('SELECT sentence FROM originSentences' + filter, function(error, results, fields){
+         connection.query('SELECT sentence, sentenceId, timeSentence FROM originSentences' + filter, function(error, results, fields){
               if(error) 
                 res.json(error);
               else
@@ -227,12 +248,11 @@ router.post('/', function (req, res) {
             
                   console.log(i);
                   console.log(results[i].sentence);
-                  text = results[i].sentence;
+                  text = '%' + results[i].sentenceId + '% ' + results[i].sentence;
                   lang = 'LIBRAS';
                   var value = {
                    text , lang
                   };
-                            console.log("teste");
 
                 request.post(
                     'http://150.165.205.88/translate',
@@ -240,25 +260,50 @@ router.post('/', function (req, res) {
                     function (error, response, body) {
                         if (!error && response.statusCode == 200) {
                             //sleep.sleep(3);
+                            anotherlist[acounter] = body;
                             acounter++;
-                            anotherlist[i] = body;
+                            if (acounter == results.length){
+                                    console.log("RESULT");
+                                    console.log(anotherlist[0] + "desordenado");
+                                    console.log(anotherlist[1] + "desordenado");
+                                    console.log(anotherlist[2] + "desordenado");
+                                    anotherlist.sort(function compare(a, b) {
+                                        if (a < b) {
+                                            return -1;
+                                        }
+                                        if (a > b) {
+                                            return 1;
+                                        }
+                                        return 0;
+                                    })
 
-                            console.log(anotherlist[i] + "anotherlist");
+                                    for (var i = 0; i < anotherlist.length; i++) {
+                                        anotherlist[i] = anotherlist[i].replace(/\W\s\d+\s\W/, "");
+                                        anotherlist[i] = anotherlist[i].replace(/\s/, "");
+                                        anotherlist[i] = anotherlist[i].toLowerCase();
+                                        anotherlist[i] = anotherlist[i].replace(anotherlist[i][0], anotherlist[i][0].toUpperCase());
 
+                                        console.log(anotherlist[i]);
+                                    }
 
-                            var transvalues = [
-                            [selectrequest, acounter, 'NULL', 'P', 'FR', anotherlist[i]], 
-                            ];            
-                            connection.query(transsql, [transvalues] , function (err, result) {
-                            if (err) throw err;
-                            console.log("Number of records inserted TRANSLATED: " + result.affectedRows);
-                            bcontador++;
-                            if (bcontador == (results.length-1)) {
-                                updateStatus(selectrequest, 4)
-                                review();
+                                    
+                                    for (var i = 0; i < anotherlist.length; i++) {
+
+                                        var transvalues = [
+                                        [selectrequest, i+1, results[i].timeSentence, 'P', 'FR', anotherlist[i]], 
+                                        ];            
+                                        connection.query(transsql, [transvalues] , function (err, result) {
+                                        if (err) throw err;
+                                        console.log("Number of records inserted TRANSLATED: " + result.affectedRows);
+                                        bcontador++;
+                                        if (bcontador == (results.length)) {
+                                            updateStatus(selectrequest, 4)
+                                            review();
+                                        }
+                                        });
+                                    }
+
                             }
-                        });
-
 
                         }
                     }

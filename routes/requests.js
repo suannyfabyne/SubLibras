@@ -1,6 +1,9 @@
 var express = require('express');
 var router = express.Router();
 var connection = require('../db/connection');
+var fs = require('fs');
+var readline = require('readline');
+
 /* GET home page. */
 
 
@@ -83,7 +86,37 @@ router.get('/reviewtable/maxoperator/:id?', (req, res) =>{
       console.log('GET joinSentences');
 });});
 
+router.get('/reviewtable/maxreview/:id?', (req, res) =>{
+    let filter = '';
+    var lista = [];
+    var contador = 0;
+    var cont2 = 1;
 
+    if(req.params.id) filter = ' WHERE requestIdReview=' + parseInt(req.params.id);
+
+   connection.query('SELECT * FROM reviewTable' + filter + 
+    ' group by sentenceId, operator DESC', function(error, results, fields){
+      if(error) 
+        res.json(error);
+      else
+        console.log(results[0].sentenceId);
+
+        for (var i = 0; i < results.length; i++) {
+            if (results[i].sentenceId == cont2){
+              lista[contador] = results[i];
+              contador++;
+              cont2++;
+            }
+        }
+
+        //console.log(lista);
+
+
+
+        res.json(lista);
+        
+      console.log('GET joinSentences');
+});});
 
 
 router.get('/reviewtable/:id?', (req, res) =>{
@@ -159,6 +192,80 @@ router.post('/reviewtable', (req, res) =>{
 });});
 
 
+/*    var txt = function() {
+        var directory = 'sinais.txt'; 
+        var rd = readline.createInterface({
+            input: fs.createReadStream(directory),
+            output: process.stdout,
+            console: false
+        });
+
+        var sign = [];
+        var timesign = [];
+
+        rd.on('line', function(line) {
+          //console.log(line);
+
+          sign = line.split('  ');
+          sign = sign.toString().split(' ');
+
+            var secondsql = "INSERT INTO signs (sign, timesign) VALUES ?";
+            var secondvalues = [
+            [sign[0], sign[1]], 
+            ];
+
+            connection.query(secondsql, [secondvalues] , function (err, result) {
+                if (err) throw err;
+                console.log('NEW SIGN INTO SIGNS');
+            });
+
+        });
+
+
+
+    }
+
+    txt();*/
+
+router.get('/sinais/:token', (req, res) =>{
+
+    let filter = '';
+
+    var token = req.params.token;
+
+    console.log(token.toUpperCase());
+        console.log('AAAAAAAA');
+
+    if(req.params.token) filter = " WHERE sign='" + token.toUpperCase() + "\t'";
+    connection.query("SELECT * FROM `signs`" + filter, function(error, results, fields){
+      if(error) 
+        res.json(error);
+      else{
+
+        res.json(results);
+
+      }
+      
+      console.log('GET signs');
+
+});
+
+/*
+            var secondsql = "INSERT INTO signs (sign, timesign) VALUES ?";
+            var secondvalues = [
+            ['oi', 123], 
+            ];
+
+            console.log(i);
+
+            connection.query(secondsql, [secondvalues] , function (err, result) {
+                if (err) throw err;
+                console.log("Number of records inserted ORIGINAL: " + i + " - " + result.affectedRows );
+            });
+*/
+
+
+});
 
 
 

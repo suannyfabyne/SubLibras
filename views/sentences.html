@@ -55,17 +55,32 @@
                 <td style="text-align: center; width: 140px;"> <p>{{sentence.sentenceId}}</p></td>
                 <td><p>{{sentence.OS}}</p></td>
                 <td><p>{{sentence.TS}}</p></td>
-                <td style="text-align: center; width: 100px;" ><p ng-if="Teste(sentence.maxoperator)" style="" class="glyphicon glyphicon-ok"></p><p ng-if="Teste2(sentence.maxoperator)" style="" class="glyphicon glyphicon-remove"></p></td>
+                <td style="text-align: center; width: 100px;" ><p ng-if="Teste(sentence.operator)" style="" class="glyphicon glyphicon-ok"></p><p ng-if="Teste2(sentence.operator)" style="" class="glyphicon glyphicon-remove"></p></td>
 
             </tr>
           </tbody>
         </table>
-        <a href="/modify"> <button type="button" class="btn btn-success" ng-click="setSentence(idSelectedSentence, sentence.operator)" style="float: right; margin-right: 6%; width: 100px;">Revisar</button> </a> 
-        <button type="button" class="btn btn-success"  ng-click="translate()">Oieeee</button>
+                <button type="button" class="btn btn-success" ng-click="finalize()"  style="float: right; margin-right: 1%; width: 100px;">Finalizar</button>
+        <a href="/modify"> <button type="button" id="botao" value="mostra" class="btn btn-warning" ng-click="setSentene(idSelectedSentence, sentence.operator)" style="float: right; margin-right: 3%; width: 100px;">Revisar</button> </a> 
+
+
 
     </div> 
 
   </div>
+    <br>
+    <div class="container" >
+      <div id="div" style='display:none; width: 100%;' value="mostra" class="alert alert-danger" role="alert">
+          <h4 style="text-align: center; font-size: 16px; font-family: FreeMono;"> Mais de 30% do seu texto não possui sinal! Revise novamente.</h4>
+      </div>
+    </div>
+
+    <div class="container">
+      <div id="div2" style='display:none; width: 100%;' value="mostra" class="alert alert-success" role="alert">
+           <h4 style="text-align: center; font-size: 16px; font-family: FreeMono;"> Seu texto está finalizado! </h4>
+      </div>
+    </div>
+
 
 </body>
 </html>
